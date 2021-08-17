@@ -1,0 +1,17 @@
+[package]
+name = "bare-wasm-demo"
+version = "0.1.0"
+authors = ["Monadic Cat <greenmonadcat@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wee_alloc = "0.4.5"
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = "s"
