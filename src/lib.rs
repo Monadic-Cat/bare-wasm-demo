@@ -17,8 +17,11 @@ extern "C" fn count() -> u64 {
 
 /// A prime sieve to demonstrate doing allocation on WASM,
 /// and hopefully strip out a bunch of cruft.
+// This Clippy lint is wrong in our situation, as Vec<T> cannot
+// cross the limited WASM ABI.
+#[allow(clippy::box_vec)]
 #[no_mangle]
-pub extern "C" fn primes(bound: u64) -> *mut Vec<u64> {
+pub extern "C" fn primes(bound: u64) -> Box<Vec<u64>> {
     let mut primes = vec![3, 7];
     'outer: for n in *primes.last().unwrap() .. bound {
         for check in primes.iter().filter(|check| check.pow(2) < n) {
@@ -29,5 +32,5 @@ pub extern "C" fn primes(bound: u64) -> *mut Vec<u64> {
         primes.push(n);
     }
 
-    Box::into_raw(Box::new(primes))
+    Box::new(primes)
 }
